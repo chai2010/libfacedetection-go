@@ -1,4 +1,4 @@
-# libfacedetection binding for Go
+# [libfacedetection](https://github.com/ShiqiYu/libfacedetection) binding for Go
 
 - https://godoc.org/github.com/chai2010/libfacedetection-go
 - https://github.com/ShiqiYu/libfacedetection
