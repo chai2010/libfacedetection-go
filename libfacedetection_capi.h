@@ -12,19 +12,32 @@
 extern "C" {
 #endif
 
-typedef struct libfacedetection_capi_face_t {
+typedef int                                   libfacedetection_capi_bool_t;
+typedef struct libfacedetection_capi_face_t   libfacedetection_capi_face_t;
+typedef struct libfacedetection_capi_result_t libfacedetection_capi_result_t;
+
+struct libfacedetection_capi_face_t {
 	int x;
 	int y;
 	int w;
 	int h;
 	int neighbors;
 	int angle;
-} libfacedetection_capi_face_t;
+};
 
-int libfacedetection_capi_facedetect_rgb(
-	uint8_t * rgb, int width, int height, int step,
-	libfacedetection_capi_face_t* face_buf,
-	int face_buf_len
+const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgb(
+	uint8_t* rgb, int width, int height, int step
+);
+const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgba(
+	uint8_t* rgba, int width, int height, int step
+);
+
+int libfacedetection_capi_result_len(
+	libfacedetection_capi_result_t* p
+);
+libfacedetection_capi_bool_t libfacedetection_capi_result_get(
+	libfacedetection_capi_result_t* p, int i,
+	libfacedetection_capi_face_t* face
 );
 
 #ifdef __cplusplus
