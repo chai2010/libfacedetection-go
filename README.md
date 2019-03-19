@@ -6,6 +6,12 @@
 ## Example ([hello.go](hello.go))
 
 ```go
+package main
+
+import (
+	"github.com/chai2010/libfacedetection-go"
+)
+
 func main() {
 	m := GetImage("./libfacedetection/images/keliamoniz2.jpg")
 	rgb, w, h := libfacedetection.NewRGBImageFrom(m)
