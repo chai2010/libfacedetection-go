@@ -31,6 +31,7 @@ func DetectFaceRGBA(m *image.RGBA) []Face {
 		C.int(m.Rect.Dy()),
 		C.int(m.Stride),
 	)
+	defer C.libfacedetection_capi_result_free(rv)
 
 	n := int(C.libfacedetection_capi_result_len(rv))
 	if n <= 0 {
@@ -64,6 +65,7 @@ func DetectFaceRGB(rgb []byte, w, h, stride int) []Face {
 		C.int(h),
 		C.int(stride),
 	)
+	defer C.libfacedetection_capi_result_free(rv)
 
 	n := int(C.libfacedetection_capi_result_len(rv))
 	if n <= 0 {

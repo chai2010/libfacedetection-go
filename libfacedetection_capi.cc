@@ -13,18 +13,36 @@ extern "C" {
 // define the buffer size. Do not change the size!
 #define DETECT_BUFFER_SIZE 0x20000
 
-const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgb(
-	uint8_t * rgb, int width, int height, int step
-) {
-	std::string sBuffer;
-	sBuffer.resize(DETECT_BUFFER_SIZE);
+struct libfacedetection_capi_result_t {
+	std::string *sBuffer;
+	int * result;
 
-	unsigned char* pBuffer = (unsigned char *)sBuffer.data();
-	int* pResults = facedetect_cnn(pBuffer, rgb, width, height, step);
-	return (libfacedetection_capi_result_t*)(pResults);
+	libfacedetection_capi_result_t(std::string* s, int* p): sBuffer(s), result(p) {
+		//
+	}
+	~libfacedetection_capi_result_t() {
+		delete this->sBuffer;
+	}
+};
+
+void libfacedetection_capi_result_free(
+	libfacedetection_capi_result_t* p
+) {
+	delete p;
 }
 
-const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgba(
+libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgb(
+	uint8_t * rgb, int width, int height, int step
+) {
+	std::string* sBuffer = new std::string();
+	sBuffer->resize(DETECT_BUFFER_SIZE);
+
+	unsigned char* pBuffer = (unsigned char *)sBuffer->data();
+	int* pResults = facedetect_cnn(pBuffer, rgb, width, height, step);
+	return new libfacedetection_capi_result_t(sBuffer, pResults);
+}
+
+libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgba(
 	uint8_t* rgba, int width, int height, int step
 ) {
 	std::string rgbBuffer;
@@ -40,16 +58,16 @@ const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgba(
 		}
 	}
 
-	std::string sBuffer;
-	sBuffer.resize(DETECT_BUFFER_SIZE);
+	std::string* sBuffer = new std::string();
+	sBuffer->resize(DETECT_BUFFER_SIZE);
 
-	unsigned char* pBuffer = (unsigned char *)sBuffer.data();
+	unsigned char* pBuffer = (unsigned char *)sBuffer->data();
 	int* pResults = facedetect_cnn(pBuffer, rgb, width, height, step);
-	return (libfacedetection_capi_result_t*)(pResults);
+	return new libfacedetection_capi_result_t(sBuffer, pResults);
 }
 
 int libfacedetection_capi_result_len(libfacedetection_capi_result_t* self) {
-	int* pResults = (int*)(self);
+	int* pResults = self->result;
 	return pResults? *pResults: 0;
 }
 
@@ -57,7 +75,7 @@ libfacedetection_capi_bool_t libfacedetection_capi_result_get(
 	libfacedetection_capi_result_t* self, int i,
 	libfacedetection_capi_face_t* face
 ) {
-	int* pResults = (int*)(self);
+	int* pResults = self->result;
 	int n = pResults? *pResults: 0;
 
 	if(i < 0 || i >= n) return 0;

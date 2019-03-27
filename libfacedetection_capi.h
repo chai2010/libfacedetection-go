@@ -25,10 +25,10 @@ struct libfacedetection_capi_face_t {
 	int angle;
 };
 
-const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgb(
+libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgb(
 	uint8_t* rgb, int width, int height, int step
 );
-const libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgba(
+libfacedetection_capi_result_t* libfacedetection_capi_facedetect_rgba(
 	uint8_t* rgba, int width, int height, int step
 );
 
@@ -38,6 +38,9 @@ int libfacedetection_capi_result_len(
 libfacedetection_capi_bool_t libfacedetection_capi_result_get(
 	libfacedetection_capi_result_t* p, int i,
 	libfacedetection_capi_face_t* face
+);
+void libfacedetection_capi_result_free(
+	libfacedetection_capi_result_t* p
 );
 
 #ifdef __cplusplus
